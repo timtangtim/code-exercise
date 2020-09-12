@@ -1,2 +1,3 @@
+include ':app:webreqestlib'
 include ':app'
 rootProject.name = "Code Exercise"
