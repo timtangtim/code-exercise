@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="weatherinfo"
+            type="com.projectx.codeexercise.request.WeatherInfo" />
+    </data>
+    <ScrollView
+        android:id="@+id/detail"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:id="@+id/countryName"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                tool:text="test"
+                android:text="@{weatherinfo.name}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:id="@+id/timezone"
+                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                tool:text="test"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countryName"
+                app:timezone="@{weatherinfo.timezone}" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

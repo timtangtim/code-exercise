@@ -1,5 +1,6 @@
 package com.projectx.codeexercise.repo
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.disposables.CompositeDisposable
@@ -16,16 +17,15 @@ class DataRepository(var apiHelper: WeatherApiManager) {
     }
     private var getDataService =
         apiHelper?.getRetrofit("")?.create(WeatherApiService::class.java)
-
     var data = MutableLiveData<WeatherInfo>();
 
-    fun getData(disposables: CompositeDisposable?, city: String): MutableLiveData<WeatherInfo> {
 
+    fun getData(disposables: CompositeDisposable?, city: String): MutableLiveData<WeatherInfo> {
         val request = getDataService?.getWeather(city)?.call(
-            object : CusSO<BaseResponse<WeatherInfo>>() {
-                override fun successHandler(t: BaseResponse<WeatherInfo>) {
-                    Log.d(TAG, "onSuccess: ${t.toString()}")
-                    data.value = t.data
+            object : CusSO<WeatherInfo>() {
+                override fun successHandler(t: WeatherInfo) {
+                    Log.d(TAG, "onSuccess: ${t.timezone}")
+                    data.value = t
                 }
 
                 override fun errorHandler(e: Throwable) {
@@ -35,6 +35,27 @@ class DataRepository(var apiHelper: WeatherApiManager) {
             }
         )
         request?.let { disposables?.add(it) }
+        return data
+    }
+
+    fun getDataWithGps(disposables: CompositeDisposable?, location: Location?): MutableLiveData<WeatherInfo> {
+        location?.also {
+            val request = getDataService?.getWeatherWithGps(location.latitude.toString(), location.longitude.toString())?.call(
+                object : CusSO<WeatherInfo>() {
+                    override fun successHandler(t: WeatherInfo) {
+                        Log.d(TAG, "onSuccess: ${t.timezone}")
+                        data.value = t
+                    }
+
+                    override fun errorHandler(e: Throwable) {
+                        Log.e(TAG, "onError:", e)
+                    }
+
+                }
+            )
+            request?.let { disposables?.add(it) }
+
+        }
         return data
     }
 }

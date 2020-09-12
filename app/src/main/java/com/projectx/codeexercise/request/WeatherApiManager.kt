@@ -28,10 +28,10 @@ class WeatherApiManager(var url: String) : SingleSourceRetrofitManager() {
 interface WeatherApiService {
 
     @GET("data/2.5/weather?appid=95d190a434083879a6398aafd54d9e73")
-    fun getWeather(@Query("q") city: String): Single<BaseResponse<WeatherInfo>>
+    fun getWeather(@Query("q") city: String): Single<WeatherInfo>
 
 
     @GET("data/2.5/weather?appid=95d190a434083879a6398aafd54d9e73")
-    fun getWeatherWithGps(@Query("lat") lat: String, @Query("lon") lon:String): Single<BaseResponse<WeatherInfo>>
+    fun getWeatherWithGps(@Query("lat") lat: String, @Query("lon") lon:String): Single<WeatherInfo>
 
 }

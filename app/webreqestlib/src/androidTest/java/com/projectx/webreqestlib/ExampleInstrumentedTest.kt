@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 
 /**
- * Instrumented test, which will execute on an Android device.
+ * Instrumented view_weather_detail, which will execute on an Android device.
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
@@ -17,8 +17,8 @@ import org.junit.Assert.*
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
+        // Context of the app under view_weather_detail.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.projectx.webreqestlib.test", appContext.packageName)
+        assertEquals("com.projectx.webreqestlib.view_weather_detail", appContext.packageName)
     }
 }
