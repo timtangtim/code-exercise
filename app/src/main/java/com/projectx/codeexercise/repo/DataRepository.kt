@@ -10,6 +10,8 @@ import com.projectx.codeexercise.request.WeatherInfo
 import com.projectx.webreqestlib.BaseResponse
 import com.projectx.webreqestlib.CusSO
 import com.projectx.webreqestlib.call
+import retrofit2.HttpException
+import java.lang.Exception
 
 class DataRepository(var apiHelper: WeatherApiManager) {
     companion object{
@@ -17,10 +19,8 @@ class DataRepository(var apiHelper: WeatherApiManager) {
     }
     private var getDataService =
         apiHelper?.getRetrofit("")?.create(WeatherApiService::class.java)
-    var data = MutableLiveData<WeatherInfo>();
 
-
-    fun getData(disposables: CompositeDisposable?, city: String): MutableLiveData<WeatherInfo> {
+    fun getData(disposables: CompositeDisposable?, city: String, data: MutableLiveData<WeatherInfo>, errorCode: MutableLiveData<String>? = null): MutableLiveData<WeatherInfo> {
         val request = getDataService?.getWeather(city)?.call(
             object : CusSO<WeatherInfo>() {
                 override fun successHandler(t: WeatherInfo) {
@@ -30,6 +30,7 @@ class DataRepository(var apiHelper: WeatherApiManager) {
 
                 override fun errorHandler(e: Throwable) {
                     Log.e(TAG, "onError:", e)
+                    errorHandle(errorCode, e)
                 }
 
             }
@@ -38,7 +39,7 @@ class DataRepository(var apiHelper: WeatherApiManager) {
         return data
     }
 
-    fun getDataWithGps(disposables: CompositeDisposable?, location: Location?): MutableLiveData<WeatherInfo> {
+    fun getDataWithGps(disposables: CompositeDisposable?, location: Location?, data: MutableLiveData<WeatherInfo>, errorCode: MutableLiveData<String>? = null): MutableLiveData<WeatherInfo> {
         location?.also {
             val request = getDataService?.getWeatherWithGps(location.latitude.toString(), location.longitude.toString())?.call(
                 object : CusSO<WeatherInfo>() {
@@ -49,6 +50,7 @@ class DataRepository(var apiHelper: WeatherApiManager) {
 
                     override fun errorHandler(e: Throwable) {
                         Log.e(TAG, "onError:", e)
+                        errorHandle(errorCode, e)
                     }
 
                 }
@@ -57,5 +59,13 @@ class DataRepository(var apiHelper: WeatherApiManager) {
 
         }
         return data
+    }
+
+    fun errorHandle(errorCode: MutableLiveData<String>?, e: Throwable) {
+        try {
+            errorCode?.value = (e as HttpException).code().toString()
+        } catch (err: Exception) {
+            Log.e(TAG, "onError:", err)
+        }
     }
 }

@@ -15,13 +15,17 @@ import com.projectx.codeexercise.request.WeatherInfo
 
 
 class SearchViewModel(application: Application) : BaseViewModel(application) {
+
+    companion object {
+        const val TAG = "SearchViewModel"
+    }
     var repo: DataRepository? = null
-    var data = MutableLiveData<WeatherInfo>()
+    var data = MutableLiveData<WeatherInfo>() // weather info
+    var cityString = MutableLiveData<String>() // user input
+    var errorCode = MutableLiveData<String>() // http error code
 
     fun searchWeather() {
-        repo?.getData(disposable, "Hong Kong")?.let {
-            data = it
-        }
+        repo?.getData(disposable, cityString.value.toString(), data, errorCode)
     }
 
     @SuppressLint("MissingPermission")
@@ -42,18 +46,18 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
 
         var location = locationGPS ?: locationNet
         Log.d(TAG, "searchWeatherWithGps: ${location.toString()}")
-        repo?.getDataWithGps(disposable, location)?.let {
-            data = it
-        }
+        repo?.getDataWithGps(disposable, location, data, errorCode)
     }
 
     private fun setupPermissions(): Boolean {
-        val permission = ContextCompat.checkSelfPermission(
-            getApplication(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        val permission = ContextCompat.checkSelfPermission(getApplication(),
+            Manifest.permission.ACCESS_FINE_LOCATION)
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
+        val permission2 = ContextCompat.checkSelfPermission(getApplication(),
+            Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        if (permission != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED) {
+            Log.i(MainActivity.TAG, "Permission to record denied")
             Log.i(MainActivity.TAG, "Permission to record denied")
             return false
         }

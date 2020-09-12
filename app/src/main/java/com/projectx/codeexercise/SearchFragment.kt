@@ -1,11 +1,13 @@
 package com.projectx.codeexercise
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,6 +28,10 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val apiHelper = WeatherApiManager("https://api.openweathermap.org")
     private val repo = DataRepository(apiHelper)
+    private val handler = Handler()
+    private val runnable = Runnable {
+        mViewModel.searchWeather()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +66,20 @@ class SearchFragment : Fragment() {
                 ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, COUNTRIES)
             binding.input.setAdapter(adapter)
 
-            mViewModel.searchWeatherWithGps()
-//            mViewModel.searchWeather()
+            //Ajax search
+            mViewModel.cityString.observe(viewLifecycleOwner, Observer { cityString ->
+                if (cityString.isEmpty()) {
+                    return@Observer
+                }
+                handler.removeCallbacks(runnable)
+                handler.postDelayed(runnable, 2000)
+            })
+
+            //basic error handle
+            //TODO: more detail message
+            mViewModel.errorCode.observe(viewLifecycleOwner, Observer {
+                Toast.makeText(requireContext(), getText(R.string.error_data_not_found), Toast.LENGTH_LONG).show()
+            })
         }
     }
 
