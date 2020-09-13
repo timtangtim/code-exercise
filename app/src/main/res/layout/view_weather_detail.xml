@@ -9,8 +9,8 @@
     </data>
     <ScrollView
         android:id="@+id/detail"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_height="wrap_content"
@@ -18,25 +18,64 @@
 
             <TextView
                 android:id="@+id/countryName"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_width="0dp"
-                tool:text="test"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:text="@{weatherinfo.name}"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tool:text="test" />
 
             <TextView
-                android:layout_height="wrap_content"
                 android:id="@+id/timezone"
-                android:layout_marginTop="8dp"
                 android:layout_width="0dp"
-                tool:text="test"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/countryName"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countryName"
-                app:timezone="@{weatherinfo.timezone}" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/countryName"
+                app:layout_constraintTop_toTopOf="@+id/countryName"
+                app:timezone="@{weatherinfo.timezone}"
+                tool:text="test" />
+
+            <TextView
+                android:id="@+id/max_temp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/label_max_temp"
+                app:layout_constraintStart_toStartOf="@+id/countryName"
+                app:layout_constraintTop_toBottomOf="@+id/countryName" />
+
+            <TextView
+                android:id="@+id/max_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:celsius="@{weatherinfo.main.tempMax}"
+                tool:text="test"
+                app:layout_constraintStart_toStartOf="@+id/countryName"
+                app:layout_constraintTop_toBottomOf="@+id/max_temp_label" />
+
+            <TextView
+                android:id="@+id/min_temp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/label_min_temp"
+                app:layout_constraintStart_toStartOf="@+id/countryName"
+                app:layout_constraintTop_toBottomOf="@+id/max_temp" />
+
+            <TextView
+                android:id="@+id/min_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:celsius="@{weatherinfo.main.tempMin}"
+                app:layout_constraintStart_toStartOf="@+id/countryName"
+                app:layout_constraintTop_toBottomOf="@+id/min_temp_label" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
