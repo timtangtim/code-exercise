@@ -2,7 +2,6 @@ package com.projectx.codeexercise
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.projectx.codeexercise.databinding.FragmentSearchBinding
 import com.projectx.codeexercise.repo.DataRepository
 import com.projectx.codeexercise.request.WeatherApiManager
-import io.reactivex.disposables.CompositeDisposable
 
 
 class SearchFragment : Fragment() {
@@ -32,6 +30,8 @@ class SearchFragment : Fragment() {
     private val runnable = Runnable {
         mViewModel.searchWeather()
     }
+    private lateinit var sharedPreferences: SharedPreferencesObject
+    private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +50,14 @@ class SearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         requireActivity().let {
+            sharedPreferences = SharedPreferencesObject(it)
+
+            //setup the history list
+            adapter =
+                ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, mutableListOf<String>())
+
+            binding.input.setAdapter(adapter)
+
             mViewModel = ViewModelProvider.AndroidViewModelFactory(it.application).create(
                 SearchViewModel::class.java
             )
@@ -57,14 +65,15 @@ class SearchFragment : Fragment() {
             mViewModel.repo = repo
             binding.viewmodel = mViewModel
             binding.lifecycleOwner = this
+            sharedPreferences.getStringSet(KEY_SEARCH_HIS)?.let { mutableSet ->
+                adapter.addAll(mutableSet)
+                adapter.notifyDataSetChanged()
+            }
 
-            val COUNTRIES = arrayOf(
-                "Belgium", "France", "Italy", "Germany", "Spain"
-            )
 
-            val adapter: ArrayAdapter<String> =
-                ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, COUNTRIES)
-            binding.input.setAdapter(adapter)
+            sharedPreferences.getString(KEY_RECENT_SEARCH, "")?.let { city ->
+                mViewModel.cityString.value = city
+            }
 
             //Ajax search
             mViewModel.cityString.observe(viewLifecycleOwner, Observer { cityString ->
@@ -79,6 +88,25 @@ class SearchFragment : Fragment() {
             //TODO: more detail message
             mViewModel.errorCode.observe(viewLifecycleOwner, Observer {
                 Toast.makeText(requireContext(), getText(R.string.error_data_not_found), Toast.LENGTH_LONG).show()
+            })
+
+
+            mViewModel.data.observe(viewLifecycleOwner, Observer { weatherInfo ->
+                val stringSet = sharedPreferences.getStringSet(KEY_SEARCH_HIS)
+                if (stringSet == null) {
+                    sharedPreferences.setStringSet(KEY_SEARCH_HIS, mutableSetOf(weatherInfo.name!!))
+                } else {
+                    stringSet.add(weatherInfo.name!!)
+                    sharedPreferences.setStringSet(KEY_SEARCH_HIS, stringSet)
+                }
+
+                //update the search list
+                adapter.remove(weatherInfo.name)
+                adapter.add(weatherInfo.name)
+                adapter.notifyDataSetChanged()
+
+                //update recent search
+                sharedPreferences.setString(KEY_RECENT_SEARCH, weatherInfo.name!!)
             })
         }
     }
