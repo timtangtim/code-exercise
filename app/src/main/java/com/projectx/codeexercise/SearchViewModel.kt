@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.projectx.codeexercise.repo.DataRepository
+import com.projectx.codeexercise.request.WeatherApiManager
 import com.projectx.codeexercise.request.WeatherInfo
 
 
@@ -21,7 +22,8 @@ open class SearchViewModel(application: Application) : BaseViewModel(application
     companion object {
         const val TAG = "SearchViewModel"
     }
-    var repo: DataRepository? = null
+
+    protected val repo = ApiHelper.getInstance().repo
     var data = MutableLiveData<WeatherInfo>() // weather info
     var cityString = MutableLiveData<String>() // user input
     var errorCode = MutableLiveData<String>() // http error code

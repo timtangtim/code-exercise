@@ -22,8 +22,12 @@ class RecentSearchFragment : Fragment() {
 
     private lateinit var viewModel: RecentSearchViewModel
     private lateinit var binding: RecentSearchFragmentBinding
-    private val apiHelper = WeatherApiManager("https://api.openweathermap.org")
-    private val repo = DataRepository(apiHelper)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel =  ViewModelProvider(this).get(RecentSearchViewModel::class.java
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +41,6 @@ class RecentSearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         requireActivity().let {
-            viewModel = ViewModelProvider.AndroidViewModelFactory(it.application).create(
-                RecentSearchViewModel::class.java
-            )
-            viewModel.repo = repo
             binding.viewmodel = viewModel
             binding.lifecycleOwner = this
 

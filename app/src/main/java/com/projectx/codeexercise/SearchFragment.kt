@@ -24,14 +24,19 @@ class SearchFragment : Fragment() {
 
     private lateinit var viewModel: SearchViewModel
     private lateinit var binding: FragmentSearchBinding
-    private val apiHelper = WeatherApiManager("https://api.openweathermap.org")
-    private val repo = DataRepository(apiHelper)
     private val handler = Handler()
     private val runnable = Runnable {
         viewModel.searchWeather()
     }
     private lateinit var sharedPreferences: SharedPreferencesObject
     private lateinit var adapter: ArrayAdapter<String>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(
+            SearchViewModel::class.java
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,12 +58,6 @@ class SearchFragment : Fragment() {
                 ArrayAdapter<String>(it, android.R.layout.simple_dropdown_item_1line, mutableListOf<String>())
 
             binding.input.setAdapter(adapter)
-
-            viewModel = ViewModelProvider.AndroidViewModelFactory(it.application).create(
-                SearchViewModel::class.java
-            )
-
-            viewModel.repo = repo
             binding.viewmodel = viewModel
             binding.lifecycleOwner = this
             sharedPreferences.getStringSet(KEY_SEARCH_HIS)?.let { mutableSet ->
