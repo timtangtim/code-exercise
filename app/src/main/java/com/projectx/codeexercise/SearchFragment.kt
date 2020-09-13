@@ -22,13 +22,13 @@ class SearchFragment : Fragment() {
         const val TAG = "SearchFragment"
     }
 
-    private lateinit var mViewModel: SearchViewModel
+    private lateinit var viewModel: SearchViewModel
     private lateinit var binding: FragmentSearchBinding
     private val apiHelper = WeatherApiManager("https://api.openweathermap.org")
     private val repo = DataRepository(apiHelper)
     private val handler = Handler()
     private val runnable = Runnable {
-        mViewModel.searchWeather()
+        viewModel.searchWeather()
     }
     private lateinit var sharedPreferences: SharedPreferencesObject
     private lateinit var adapter: ArrayAdapter<String>
@@ -54,25 +54,24 @@ class SearchFragment : Fragment() {
 
             binding.input.setAdapter(adapter)
 
-            mViewModel = ViewModelProvider.AndroidViewModelFactory(it.application).create(
+            viewModel = ViewModelProvider.AndroidViewModelFactory(it.application).create(
                 SearchViewModel::class.java
             )
 
-            mViewModel.repo = repo
-            binding.viewmodel = mViewModel
+            viewModel.repo = repo
+            binding.viewmodel = viewModel
             binding.lifecycleOwner = this
             sharedPreferences.getStringSet(KEY_SEARCH_HIS)?.let { mutableSet ->
                 adapter.addAll(mutableSet)
                 adapter.notifyDataSetChanged()
             }
 
-
             sharedPreferences.getString(KEY_RECENT_SEARCH, "")?.let { city ->
-                mViewModel.cityString.value = city
+                viewModel.cityString.value = city
             }
 
             //Ajax search
-            mViewModel.cityString.observe(viewLifecycleOwner, Observer { cityString ->
+            viewModel.cityString.observe(viewLifecycleOwner, Observer { cityString ->
                 if (cityString.isEmpty()) {
                     return@Observer
                 }
@@ -82,12 +81,12 @@ class SearchFragment : Fragment() {
 
             //basic error handle
             //TODO: more detail message
-            mViewModel.errorCode.observe(viewLifecycleOwner, Observer {
+            viewModel.errorCode.observe(viewLifecycleOwner, Observer {
                 Toast.makeText(requireContext(), getText(R.string.error_data_not_found), Toast.LENGTH_LONG).show()
             })
 
 
-            mViewModel.data.observe(viewLifecycleOwner, Observer { weatherInfo ->
+            viewModel.data.observe(viewLifecycleOwner, Observer { weatherInfo ->
                 val stringSet = sharedPreferences.getStringSet(KEY_SEARCH_HIS)
                 if (stringSet == null) {
                     sharedPreferences.setStringSet(KEY_SEARCH_HIS, mutableSetOf(weatherInfo.name!!))

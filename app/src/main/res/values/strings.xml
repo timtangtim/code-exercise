@@ -8,4 +8,6 @@
     <string name="error_data_not_found">Data not found! Please input correct information.</string>
     <string name="label_max_temp">Max temperature</string>
     <string name="label_min_temp">Min temperature</string>
+    <string name="delete">Delete</string>
+    <string name="btn_history">Hist</string>
 </resources>

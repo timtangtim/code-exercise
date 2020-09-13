@@ -24,7 +24,7 @@
             android:inputType="text"
             android:text="@={viewmodel.cityString}"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button2"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Name" />
 
@@ -58,6 +58,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.9" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/btn_history"
+            android:onClick="@{viewmodel::goToHis}"
+            app:layout_constraintBottom_toBottomOf="@+id/input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/input" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

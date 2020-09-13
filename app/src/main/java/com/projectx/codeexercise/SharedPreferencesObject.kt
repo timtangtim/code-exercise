@@ -23,7 +23,7 @@ class SharedPreferencesObject(context: Context) {
 
     fun setString(key: String, value: String?) {
         editor.putString(key, value)
-        editor.commit()
+        editor.apply()
     }
 
     fun getStringSet(key: String?, default_value: MutableSet<String>? = null): MutableSet<String>? {
@@ -32,7 +32,7 @@ class SharedPreferencesObject(context: Context) {
 
     fun setStringSet(key: String, value: MutableSet<String>? = null) {
         editor.putStringSet(key, value)
-        editor.commit()
+        editor.apply()
     }
 
     fun getInt(key: String, default_value: Int = 0): Int {
@@ -41,7 +41,7 @@ class SharedPreferencesObject(context: Context) {
 
     fun setInt(key: String, value: Int = 0) {
         editor.putInt(key, value)
-        editor.commit()
+        editor.apply()
     }
 
     fun getBoolean(key: String, default_value: Boolean =  false): Boolean {
@@ -50,7 +50,7 @@ class SharedPreferencesObject(context: Context) {
 
     fun setBoolean(key: String?, value: Boolean = false) {
         editor.putBoolean(key, value)
-        editor.commit()
+        editor.apply()
     }
 
 

@@ -8,13 +8,15 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.findNavController
 import com.projectx.codeexercise.repo.DataRepository
 import com.projectx.codeexercise.request.WeatherInfo
 
 
-class SearchViewModel(application: Application) : BaseViewModel(application) {
+open class SearchViewModel(application: Application) : BaseViewModel(application) {
 
     companion object {
         const val TAG = "SearchViewModel"
@@ -62,5 +64,11 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
         }
 
         return true
+    }
+
+    fun goToHis(v: View?) {
+        val action =
+            SearchFragmentDirections.actionSearchFragmentToRecentSearchFragment()
+        v?.findNavController()?.navigate(action)
     }
 }
