@@ -1,12 +1,9 @@
 package com.projectx.codeexercise
 
-import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.projectx.codeexercise.generated.callback.OnClickListener
 import com.projectx.codeexercise.recycleview.RecentSearchAdapter
 
 const val TAG = "BindingAdapter"
@@ -43,8 +40,9 @@ fun calCelsius(celsius: Double): Float {
 }
 
 
-@BindingAdapter("recentSearchAdapter", "layoutManager")
-fun bindAdapter(view: RecyclerView, recentSearchAdapter: RecentSearchAdapter, layoutManager: LinearLayoutManager) {
-    view.layoutManager = layoutManager
-    view.adapter = recentSearchAdapter
+@BindingAdapter("recentSearchAdapter")
+fun bindAdapter(view: RecyclerView, recentSearchAdapter: RecentSearchAdapter) {
+    if (view.adapter == null) {
+        view.adapter = recentSearchAdapter
+    }
 }

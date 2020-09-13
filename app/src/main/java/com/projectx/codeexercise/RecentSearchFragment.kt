@@ -9,16 +9,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.projectx.codeexercise.databinding.FragmentSearchBinding
 import com.projectx.codeexercise.databinding.RecentSearchFragmentBinding
 import com.projectx.codeexercise.repo.DataRepository
 import com.projectx.codeexercise.request.WeatherApiManager
 
 class RecentSearchFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = RecentSearchFragment()
-    }
 
     private lateinit var viewModel: RecentSearchViewModel
     private lateinit var binding: RecentSearchFragmentBinding
@@ -35,6 +32,7 @@ class RecentSearchFragment : Fragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.recent_search_fragment, container, false)
+        binding.hisList.layoutManager = LinearLayoutManager(context)
         return binding.root
     }
 
