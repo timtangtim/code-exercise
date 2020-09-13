@@ -12,8 +12,6 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
-import com.projectx.codeexercise.repo.DataRepository
-import com.projectx.codeexercise.request.WeatherApiManager
 import com.projectx.codeexercise.request.WeatherInfo
 
 
@@ -27,9 +25,24 @@ open class SearchViewModel(application: Application) : BaseViewModel(application
     var data = MutableLiveData<WeatherInfo>() // weather info
     var cityString = MutableLiveData<String>() // user input
     var errorCode = MutableLiveData<String>() // http error code
+    private var sharedPreferences = SharedPreferencesObject(getApplication())
+    var updateHis = { weatherInfo: WeatherInfo ->
+
+            val stringSet = sharedPreferences.getStringSet(KEY_SEARCH_HIS)
+            if (stringSet == null) {
+                sharedPreferences.setStringSet(KEY_SEARCH_HIS, mutableSetOf(weatherInfo.name!!))
+            } else {
+                stringSet.add(weatherInfo.name!!)
+                sharedPreferences.setStringSet(KEY_SEARCH_HIS, stringSet)
+            }
+
+            //update recent search
+            sharedPreferences.setString(KEY_RECENT_SEARCH, weatherInfo.name!!)
+
+    }
 
     fun searchWeather() {
-        repo?.getData(disposable, cityString.value.toString(), data, errorCode)
+        repo?.getData(disposable, cityString.value.toString(), data, errorCode, updateHis)
     }
 
     @SuppressLint("MissingPermission")
@@ -50,7 +63,7 @@ open class SearchViewModel(application: Application) : BaseViewModel(application
 
         var location = locationGPS ?: locationNet
 //        Log.d(TAG, "searchWeatherWithGps: ${locationGPS.toString()}, ${locationNet.toString()}, ${location.toString()}")
-        repo?.getDataWithGps(disposable, location, data, errorCode)
+        repo?.getDataWithGps(disposable, location, data, errorCode, updateHis)
     }
 
     private fun setupPermissions(): Boolean {

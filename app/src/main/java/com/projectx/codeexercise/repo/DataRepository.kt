@@ -7,7 +7,6 @@ import io.reactivex.disposables.CompositeDisposable
 import com.projectx.codeexercise.request.WeatherApiManager
 import com.projectx.codeexercise.request.WeatherApiService
 import com.projectx.codeexercise.request.WeatherInfo
-import com.projectx.webreqestlib.BaseResponse
 import com.projectx.webreqestlib.CusSO
 import com.projectx.webreqestlib.call
 import retrofit2.HttpException
@@ -20,12 +19,19 @@ class DataRepository(var apiHelper: WeatherApiManager) {
     private var getDataService =
         apiHelper?.getRetrofit("")?.create(WeatherApiService::class.java)
 
-    fun getData(disposables: CompositeDisposable?, city: String, data: MutableLiveData<WeatherInfo>, errorCode: MutableLiveData<String>? = null): MutableLiveData<WeatherInfo> {
+    fun getData(
+        disposables: CompositeDisposable?,
+        city: String,
+        data: MutableLiveData<WeatherInfo>,
+        errorCode: MutableLiveData<String>? = null,
+        updateHis: (WeatherInfo) -> Unit
+    ): MutableLiveData<WeatherInfo> {
         val request = getDataService?.getWeather(city)?.call(
             object : CusSO<WeatherInfo>() {
                 override fun successHandler(t: WeatherInfo) {
                     Log.d(TAG, "onSuccess: ${t.timezone}")
                     data.value = t
+                    updateHis(t)
                 }
 
                 override fun errorHandler(e: Throwable) {
@@ -39,13 +45,20 @@ class DataRepository(var apiHelper: WeatherApiManager) {
         return data
     }
 
-    fun getDataWithGps(disposables: CompositeDisposable?, location: Location?, data: MutableLiveData<WeatherInfo>, errorCode: MutableLiveData<String>? = null): MutableLiveData<WeatherInfo> {
+    fun getDataWithGps(
+        disposables: CompositeDisposable?,
+        location: Location?,
+        data: MutableLiveData<WeatherInfo>,
+        errorCode: MutableLiveData<String>? = null,
+        updateHis: (WeatherInfo) -> Unit
+    ): MutableLiveData<WeatherInfo> {
         location?.also {
             val request = getDataService?.getWeatherWithGps(location.latitude.toString(), location.longitude.toString())?.call(
                 object : CusSO<WeatherInfo>() {
                     override fun successHandler(t: WeatherInfo) {
                         Log.d(TAG, "onSuccess: ${t.timezone}")
                         data.value = t
+                        updateHis(t)
                     }
 
                     override fun errorHandler(e: Throwable) {

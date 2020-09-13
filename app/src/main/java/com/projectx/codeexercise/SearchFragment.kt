@@ -86,21 +86,10 @@ class SearchFragment : Fragment() {
 
 
             viewModel.data.observe(viewLifecycleOwner, Observer { weatherInfo ->
-                val stringSet = sharedPreferences.getStringSet(KEY_SEARCH_HIS)
-                if (stringSet == null) {
-                    sharedPreferences.setStringSet(KEY_SEARCH_HIS, mutableSetOf(weatherInfo.name!!))
-                } else {
-                    stringSet.add(weatherInfo.name!!)
-                    sharedPreferences.setStringSet(KEY_SEARCH_HIS, stringSet)
-                }
-
                 //update the search list
                 adapter.remove(weatherInfo.name)
                 adapter.add(weatherInfo.name)
                 adapter.notifyDataSetChanged()
-
-                //update recent search
-                sharedPreferences.setString(KEY_RECENT_SEARCH, weatherInfo.name!!)
             })
         }
     }

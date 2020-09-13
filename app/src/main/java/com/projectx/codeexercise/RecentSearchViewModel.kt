@@ -35,7 +35,7 @@ class RecentSearchViewModel(application: Application) : SearchViewModel(applicat
             }
         } else if (v is TextView) {
             Log.d(TAG, "onClick: IN")
-            repo?.getData(disposable, v.text.toString(), data, errorCode)
+            repo?.getData(disposable, v.text.toString(), data, errorCode, updateHis)
         }
     }
 
@@ -52,9 +52,9 @@ class RecentSearchViewModel(application: Application) : SearchViewModel(applicat
 
             if (pendingToDelete.contains(sharedPreferences.getString(KEY_RECENT_SEARCH,"")) && set.size > 0) {
                 sharedPreferences.setString(KEY_RECENT_SEARCH, set.first())
-            } else {
+            } else if (set.size == 0){
                 //clear the recent search
-                sharedPreferences.setString(KEY_RECENT_SEARCH, "")
+                sharedPreferences.setString(KEY_RECENT_SEARCH, null)
             }
             //clear all
             sharedPreferences.setStringSet(KEY_SEARCH_HIS, null)
