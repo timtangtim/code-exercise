@@ -45,7 +45,7 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
         val locationNet = mLocationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
 
         var location = locationGPS ?: locationNet
-        Log.d(TAG, "searchWeatherWithGps: ${location.toString()}")
+//        Log.d(TAG, "searchWeatherWithGps: ${locationGPS.toString()}, ${locationNet.toString()}, ${location.toString()}")
         repo?.getDataWithGps(disposable, location, data, errorCode)
     }
 
@@ -57,7 +57,6 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
             Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (permission != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED) {
-            Log.i(MainActivity.TAG, "Permission to record denied")
             Log.i(MainActivity.TAG, "Permission to record denied")
             return false
         }
