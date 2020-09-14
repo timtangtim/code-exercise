@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Code Exercise (Weather)</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    
+    
+<!--  Error  -->
+    <string name="error_data_not_found">Data not found! Please input correct information.</string>
+    <string name="label_max_temp">Max temperature</string>
+    <string name="label_min_temp">Min temperature</string>
+    <string name="delete">Delete</string>
+    <string name="btn_history">Hist</string>
+</resources>
